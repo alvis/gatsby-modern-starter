@@ -42,3 +42,5 @@
 
 // export const wrapPageElement: GatsbyBrowser['wrapPageElement'] = (parameters): JSX.Element => {};
 // export const wrapRootElement: GatsbyBrowser['wrapRootElement'] = (parameters): JSX.Element => {};
+
+import './src/styles/global.css';

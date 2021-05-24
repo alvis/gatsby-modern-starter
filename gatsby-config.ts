@@ -42,6 +42,7 @@ export const siteMetadata: GatsbyConfig['siteMetadata'] = {
 };
 
 export const plugins: GatsbyConfig['plugins'] = [
+  'gatsby-plugin-postcss',
   'gatsby-plugin-react-helmet',
   {
     resolve: `gatsby-plugin-graphql-codegen`,
