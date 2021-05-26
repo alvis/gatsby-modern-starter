@@ -41,6 +41,8 @@ export const siteMetadata: GatsbyConfig['siteMetadata'] = {
   title: `A Gatsby Web App`,
 };
 
+const isProduction = process.env['NODE_ENV'] === 'production';
+
 export const plugins: GatsbyConfig['plugins'] = [
   'gatsby-plugin-postcss',
   'gatsby-plugin-react-helmet',
@@ -48,6 +50,18 @@ export const plugins: GatsbyConfig['plugins'] = [
     resolve: `gatsby-plugin-graphql-codegen`,
     options: {
       fileName: `./types/@graphql.ts`,
+    },
+  },
+  {
+    resolve: `gatsby-source-sanity`,
+    options: {
+      // projectId & dataset
+      ...require('./sanity/sanity.json')['api'],
+      // version: '2021-03-25', // version is unused for v6
+      token: process.env.SANITY_TOKEN,
+      graphqlTag: 'default',
+      watchMode: !isProduction,
+      overlayDrafts: !isProduction,
     },
   },
 ];

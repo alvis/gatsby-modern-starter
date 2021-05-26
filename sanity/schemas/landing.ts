@@ -25,13 +25,13 @@ const schema = {
   fields: [
     {
       title: 'Hero Title',
-      name: 'hero_title',
+      name: 'heroTitle',
       type: 'string',
       description: 'The hero title on the landing page.',
     },
     {
       title: 'Hero Content',
-      name: 'hero_content',
+      name: 'heroContent',
       type: 'string',
       description: 'The copy under the hero title.',
     },
