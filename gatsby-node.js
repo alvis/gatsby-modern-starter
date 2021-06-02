@@ -17,13 +17,9 @@
  * -------------------------------------------------------------------------
  */
 
-import { readFileSync } from 'fs';
-import { resolve } from 'path';
-import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
-
-import type { GatsbyNode } from 'gatsby';
-
-import type { CompilerOptions } from 'typescript';
+const { readFileSync } = require('fs');
+const { resolve } = require('path');
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
 // export const createPages: GatsbyNode['createPages'] = async (parameters): Promise<void> => {};
 // export const createPagesStatefully: GatsbyNode['createPagesStatefully'] = async (parameters): Promise<void> => {};
@@ -50,9 +46,7 @@ import type { CompilerOptions } from 'typescript';
 // export const sourceNodes: GatsbyNode['sourceNodes'] = async (parameters): Promise<void> => {};
 
 // use babel to transpile typescript
-export const onCreateBabelConfig: GatsbyNode['onCreateBabelConfig'] = async ({
-  actions,
-}): Promise<void> => {
+const onCreateBabelConfig = async ({ actions }) => {
   actions.setBabelPreset({
     name: '@babel/preset-typescript',
     options: {},
@@ -79,10 +73,7 @@ export const onCreateBabelConfig: GatsbyNode['onCreateBabelConfig'] = async ({
   }
 };
 
-export const onCreateWebpackConfig: GatsbyNode['onCreateWebpackConfig'] = ({
-  stage,
-  actions,
-}) => {
+const onCreateWebpackConfig = ({ stage, actions }) => {
   switch (stage) {
     case 'build-javascript':
       actions.setWebpackConfig({
@@ -104,9 +95,7 @@ export const onCreateWebpackConfig: GatsbyNode['onCreateWebpackConfig'] = ({
   }
 };
 
-export const createPagesStatefully: GatsbyNode['createPagesStatefully'] = async ({
-  actions: { createPage },
-}): Promise<void> => {
+const createPagesStatefully = async ({ actions: { createPage } }) => {
   // host all protected pages under /app
   createPage({
     path: `/app`,
@@ -120,10 +109,7 @@ export const createPagesStatefully: GatsbyNode['createPagesStatefully'] = async 
  * get the path setting for babel-plugin-module-resolver from tsconfig
  * @returns path alias if present
  */
-function getTSPathAlias(): {
-  root: string;
-  alias: Record<string, string>;
-} | void {
+function getTSPathAlias() {
   const { baseUrl, paths } = getTSCompilerOptions();
 
   if (paths) {
@@ -149,7 +135,7 @@ function getTSPathAlias(): {
  * @param path ts path
  * @returns pairs of module loader alias
  */
-function convertTSPathToAlias(key: string, path: string): [string, string] {
+function convertTSPathToAlias(key, path) {
   return key.endsWith('*')
     ? [`^${key.replace(/\*$/, '(.+)')}`, path.replace(/\*$/, '\\1')]
     : [key, path];
@@ -159,13 +145,16 @@ function convertTSPathToAlias(key: string, path: string): [string, string] {
  * get compiler options from tsconfig.json
  * @returns compiler options
  */
-function getTSCompilerOptions(): CompilerOptions {
+function getTSCompilerOptions() {
   const tsconfig = JSON.parse(
     readFileSync(resolve(__dirname, 'tsconfig.json')).toString(),
-  ) as {
-    /** the compilerOptions in tsconfig.json */
-    compilerOptions?: CompilerOptions;
-  };
+  );
 
   return tsconfig.compilerOptions ?? {};
 }
+
+module.exports = {
+  onCreateBabelConfig,
+  onCreateWebpackConfig,
+  createPagesStatefully,
+};
